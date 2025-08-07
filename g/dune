@@ -1,2 +1,4 @@
 (executable
-  (name g))
+  (name g)
+  (public_name g)
+  (libraries lit))
