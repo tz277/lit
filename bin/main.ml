@@ -1,16 +1,15 @@
 (* dune exec lit abc def *)
-let () =
-  let args =
-    match Sys.argv |> Array.to_list with
-    | _program_name :: args -> args
-    | [] -> raise (Failure "Impossible")
-  in
 
-  let inner : string =
-    List.fold_left
-      (fun acc elt -> if acc = "" then elt else acc ^ ", " ^ elt)
-      "" args
-  in
+let command_of_args (args : string list) : string =
+  "git " ^ String.concat " " args
 
-  print_endline ("[" ^ inner ^ "]");
-  print_endline (string_of_int Lit.System.x)
+let main () : unit =
+  let args = Sys.argv |> Lit.System.args_of_argv in
+
+  let command = args |> command_of_args in
+
+  let in_channel = Unix.open_process_in command in
+
+  Lit.System.do_each_line in_channel print_endline
+
+let () = main ()
